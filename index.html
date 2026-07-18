@@ -3,19 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo Express</title>
+    <title>MU Steak House - Catálogo</title>
+    <!-- Iconos para el logo de WhatsApp -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Estilo Rústico / Industrial */
         :root {
-            --bg-dark: #1e1b18;
+            --bg-dark: #12100e;
+            --card-bg: #1a1613;
             --wood-light: #d4a373;
             --wood-dark: #8b5a2b;
             --text-light: #f4f1de;
-            --card-bg: #2b2622;
+            --accent-iron: #4a4540;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             background-color: var(--bg-dark);
             color: var(--text-light);
             margin: 0;
@@ -23,136 +25,339 @@
         }
 
         header {
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1000') center/cover;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1000') center/cover;
             text-align: center;
-            padding: 60px 20px;
-            border-bottom: 5px solid var(--wood-light);
+            padding: 50px 20px;
+            border-bottom: 4px solid var(--wood-light);
         }
 
         header h1 {
             margin: 0;
-            font-size: 2.5rem;
-            letter-spacing: 2px;
-            color: var(--text-light);
+            font-size: 2.8rem;
+            letter-spacing: 3px;
             text-transform: uppercase;
+            color: var(--text-light);
         }
 
         header p {
             color: var(--wood-light);
             font-style: italic;
+            margin-top: 5px;
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 40px auto;
             padding: 0 20px;
         }
 
-        .grid {
+        /* Vista de Categorías Principales */
+        .grid-categorias {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 25px;
+        }
+
+        .cat-card {
+            background-color: var(--card-bg);
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid var(--accent-iron);
+            cursor: pointer;
+            transition: transform 0.3s, border-color 0.3s;
+            position: relative;
+        }
+
+        .cat-card:hover {
+            transform: scale(1.03);
+            border-color: var(--wood-light);
+        }
+
+        .cat-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            filter: grayscale(30%);
+            transition: filter 0.3s;
+        }
+
+        .cat-card:hover .cat-img {
+            filter: grayscale(0%);
+        }
+
+        .cat-title {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            padding: 20px 15px;
+            margin: 0;
+            font-size: 1.4rem;
+            text-transform: uppercase;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        /* Vistas de Catálogos Ocultos */
+        .catalogo-seccion {
+            display: none;
+        }
+
+        .btn-volver {
+            background-color: var(--accent-iron);
+            color: var(--text-light);
+            border: 1px solid var(--wood-light);
+            padding: 10px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            transition: background 0.3s;
+        }
+
+        .btn-volver:hover {
+            background-color: var(--wood-dark);
+        }
+
+        .seccion-titulo {
+            font-size: 2rem;
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--wood-light);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            color: var(--wood-light);
+        }
+
+        /* Grid de Productos */
+        .grid-productos {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 30px;
         }
 
-        .card {
+        .prod-card {
             background-color: var(--card-bg);
-            border-radius: 8px;
+            border-radius: 6px;
+            border: 1px solid var(--accent-iron);
             overflow: hidden;
-            border: 1px solid #3e3731;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        .card-img {
+        .prod-img {
             width: 100%;
             height: 200px;
             object-fit: cover;
-            border-bottom: 3px solid var(--wood-light);
         }
 
-        .card-content {
+        .prod-info {
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
         }
 
-        .card-title {
+        .prod-name {
             margin: 0 0 10px 0;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
         }
 
-        .card-price {
+        .prod-desc {
+            font-size: 0.95rem;
+            color: #b3a9a0;
+            margin: 0 0 15px 0;
+            flex-grow: 1;
+            line-height: 1.4;
+        }
+
+        .prod-precio {
+            font-size: 1.4rem;
             color: var(--wood-light);
             font-weight: bold;
-            font-size: 1.2rem;
             margin-bottom: 15px;
         }
 
-        .btn-whatsapp {
-            display: block;
+        .btn-pedir {
             background-color: #25d366;
             color: white;
             text-align: center;
             padding: 12px;
             text-decoration: none;
             font-weight: bold;
-            border-radius: 5px;
+            border-radius: 4px;
             transition: background 0.3s;
+            text-transform: uppercase;
+            font-size: 0.9rem;
         }
 
-        .btn-whatsapp:hover {
+        .btn-pedir:hover {
+            background-color: #128c7e;
+        }
+
+        /* Botón Flotante de WhatsApp */
+        .wpp-flotante {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 30px;
+            right: 30px;
+            background-color: #25d366;
+            color: #fff;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 35px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .wpp-flotante:hover {
+            transform: scale(1.1);
             background-color: #128c7e;
         }
 
         footer {
             text-align: center;
             padding: 40px 20px;
-            color: #777;
+            color: #554e48;
             font-size: 0.9rem;
-            border-top: 1px solid #2b2622;
+            margin-top: 60px;
+            border-top: 1px solid var(--accent-iron);
         }
     </style>
 </head>
 <body>
 
+    <!-- BOTÓN FLOTANTE DE WHATSAPP -->
+    <a href="https://wa.me/59892684093?text=Hola!%20Quiero%20hacer%20una%20consulta%20sobre%20el%20catálogo." class="wpp-flotante" target="_blank">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
     <header>
-        <h1>Mi Catálogo Online</h1>
-        <p>Calidad artesanal directa a tu puerta</p>
+        <h1>MU Steak House</h1>
+        <p>Selección de fuegos y carnes artesanales</p>
     </header>
 
     <div class="container">
-        <div class="grid">
+
+        <!-- VISTA 1: CUATRO CATEGORÍAS PRINCIPALES -->
+        <div id="vista-categorias" class="grid-categorias">
             
-            <!-- Producto 1 -->
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=500" alt="Producto 1" class="card-img">
-                <div class="card-content">
-                    <h3 class="card-title">Opción Premium</h3>
-                    <p>Descripción breve del producto destacando los materiales o ingredientes clave.</p>
-                    <div class="card-price">$ 450</div>
-                    <a href="https://wa.me/59899000000?text=Hola!%20Me%20interesa%20la%20Opción%20Premium" target="_blank" class="btn-whatsapp">Pedir por WhatsApp</a>
-                </div>
+            <div class="cat-card" onclick="mostrarSeccion('premium')">
+                <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=600" class="cat-img" alt="Cortes Premium">
+                <h3 class="cat-title">Cortes Premium</h3>
             </div>
 
-            <!-- Producto 2 -->
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=500" alt="Producto 2" class="card-img">
-                <div class="card-content">
-                    <h3 class="card-title">Opción Clásica</h3>
-                    <p>Detalles seleccionados para el cliente. Rápido, directo y sin vueltas.</p>
-                    <div class="card-price">$ 380</div>
-                    <a href="https://wa.me/59899000000?text=Hola!%20Me%20interesa%20la%20Opción%20Clásica" target="_blank" class="btn-whatsapp">Pedir por WhatsApp</a>
-                </div>
+            <div class="cat-card" onclick="mostrarSeccion('diarios')">
+                <img src="https://images.unsplash.com/photo-1603048588665-791ca8aea617?w=600" class="cat-img" alt="Cortes Diarios">
+                <h3 class="cat-title">Para todos los días</h3>
+            </div>
+
+            <div class="cat-card" onclick="mostrarSeccion('categoria3')">
+                <img src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=600" class="cat-img" alt="Categoría 3">
+                <h3 class="cat-title">Achuras y Embutidos</h3>
+            </div>
+
+            <div class="cat-card" onclick="mostrarSeccion('categoria4')">
+                <img src="https://images.unsplash.com/photo-1546964124-0cce460f38ef?w=600" class="cat-img" alt="Categoría 4">
+                <h3 class="cat-title">Para la Parrilla</h3>
             </div>
 
         </div>
+
+        <!-- VISTA 2A: DETALLE CORTES PREMIUM -->
+        <div id="seccion-premium" class="catalogo-seccion">
+            <button class="btn-volver" onclick="volverACategorias()">← Volver a Categorías</button>
+            <h2 class="seccion-titulo">Cortes Premium</h2>
+            
+            <div class="grid-productos">
+                <div class="prod-card">
+                    <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=500" class="prod-img" alt="Ojo de Bife">
+                    <div class="prod-info">
+                        <h3 class="prod-name">Ojo de Bife Exportación</h3>
+                        <p class="prod-desc">Corte con un marmoleo excepcional que garantiza una jugosidad y ternura inigualables a la parrilla.</p>
+                        <div class="prod-precio">$ 650 / kg</div>
+                        <a href="https://wa.me/59892684093?text=Hola!%20Me%20interesa%20el%20Ojo%20de%20Bife%20Premium" target="_blank" class="btn-pedir">Encargar por WhatsApp</a>
+                    </div>
+                </div>
+                <div class="prod-card">
+                    <img src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=500" class="prod-img" alt="Tomahawk">
+                    <div class="prod-info">
+                        <h3 class="prod-name">Tomahawk Steak</h3>
+                        <p class="prod-desc">Un corte imponente con hueso largo, ideal para lucirse en el fuego. Carne madurada seleccionada.</p>
+                        <div class="prod-precio">$ 890 / kg</div>
+                        <a href="https://wa.me/59892684093?text=Hola!%20Me%20interesa%20el%20Tomahawk%20Premium" target="_blank" class="btn-pedir">Encargar por WhatsApp</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VISTA 2B: DETALLE PARA TODOS LOS DÍAS -->
+        <div id="seccion-diarios" class="catalogo-seccion">
+            <button class="btn-volver" onclick="volverACategorias()">← Volver a Categorías</button>
+            <h2 class="seccion-titulo">Para Todos los Días</h2>
+            
+            <div class="grid-productos">
+                <div class="prod-card">
+                    <img src="https://images.unsplash.com/photo-1603048588665-791ca8aea617?w=500" class="prod-img" alt="Pulpa Especial">
+                    <div class="prod-info">
+                        <h3 class="prod-name">Pulpa para Milanesas</h3>
+                        <p class="prod-desc">Corte magro, tierno y perfectamente fileteado. Ideal para las comidas rápidas de la semana en familia.</p>
+                        <div class="prod-precio">$ 390 / kg</div>
+                        <a href="https://wa.me/59892684093?text=Hola!%20Me%20interesa%20la%20Pulpa%20para%20Milanesas" target="_blank" class="btn-pedir">Encargar por WhatsApp</a>
+                    </div>
+                </div>
+                <div class="prod-card">
+                    <img src="https://images.unsplash.com/photo-1546964124-0cce460f38ef?w=500" class="prod-img" alt="Carne Picada">
+                    <div class="prod-info">
+                        <h3 class="prod-name">Carne Picada Especial</h3>
+                        <p class="prod-desc">Molida en el día, con el porcentaje justo de grasa para asegurar sabor en tuco, hamburguesas o pastel de carne.</p>
+                        <div class="prod-precio">$ 290 / kg</div>
+                        <a href="https://wa.me/59892684093?text=Hola!%20Me%20interesa%20la%20Carne%20Picada%20Especial" target="_blank" class="btn-pedir">Encargar por WhatsApp</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIONES 3 Y 4 -->
+        <div id="seccion-categoria3" class="catalogo-seccion">
+            <button class="btn-volver" onclick="volverACategorias()">← Volver</button>
+            <h2 class="seccion-titulo">Achuras y Embutidos</h2>
+            <p>Próximamente más productos en esta sección.</p>
+        </div>
+
+        <div id="seccion-categoria4" class="catalogo-seccion">
+            <button class="btn-volver" onclick="volverACategorias()">← Volver</button>
+            <h2 class="seccion-titulo">Para la Parrilla</h2>
+            <p>Próximamente más productos en esta sección.</p>
+        </div>
+
     </div>
 
     <footer>
-        <p>&copy; 2026 Todos los derechos reservados.</p>
+        <p>&copy; 2026 MU Steak House. Todos los derechos reservados.</p>
     </footer>
 
+    <script>
+        function mostrarSeccion(idSeccion) {
+            document.getElementById('vista-categorias').style.display = 'none';
+            document.getElementById('seccion-' + idSeccion).style.display = 'block';
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function volverACategorias() {
+            var secciones = document.getElementsByClassName('catalogo-seccion');
+            for (var i = 0; i < secciones.length; i++) {
+                secciones[i].style.display = 'none';
+            }
+            document.getElementById('vista-categorias').style.display = 'grid';
+        }
+    </script>
 </body>
-  </html>
+</html>
