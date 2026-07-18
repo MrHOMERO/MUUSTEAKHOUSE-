@@ -348,7 +348,7 @@
 
         function enviarPedidoWhatsApp() {
             if (pedidoMap.size === 0) return;
-            let mensaje = "¡Hola MU Steak House! Quiero confirmar el siguiente pedido inteligente:\n\n";
+            let mensaje = "¡Hola MUU Steak House! Quiero confirmar el siguiente pedido:\n\n";
             let totalFinal = 0;
             pedidoMap.forEach(item => {
                 const subtotalItem = item.cantidad * item.basePrice;
@@ -356,7 +356,7 @@
                 mensaje += `- *${item.name}*: ${item.cantidad} kg ($${item.basePrice}/kg) -> Subtotal: *$${subtotalItem.toFixed(2)}*\n`;
             });
             mensaje += `\n*TOTAL FINAL DEL PEDIDO: $${totalFinal.toFixed(2)}*\n\n`;
-            mensaje += "Por favor confirmen la recepción. ¡Gracias!";
+            mensaje += "Espero su respuesta para coordinar el horario de entrega. ¡Gracias!";
             window.open(`https://wa.me/${tuNumeroWhatsApp}?text=${encodeURIComponent(mensaje)}`, '_blank');
         }
 
