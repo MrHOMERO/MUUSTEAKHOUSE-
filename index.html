@@ -246,26 +246,26 @@
 
     <div class="container">
 
-        <!-- VISTA 1: CUATRO CATEGORÍAS PRINCIPALES -->
+        <!-- VISTA 1: CUATRO CATEGORÍAS PRINCIPALES CON TUS FOTOS -->
         <div id="vista-categorias" class="grid-categorias">
             
             <div class="cat-card" onclick="mostrarSeccion('premium')">
-                <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=600" class="cat-img" alt="Cortes Premium">
+                <img src="cortes premium.png" class="cat-img" alt="Cortes Premium">
                 <h3 class="cat-title">Cortes Premium</h3>
             </div>
 
             <div class="cat-card" onclick="mostrarSeccion('diarios')">
-                <img src="https://images.unsplash.com/photo-1603048588665-791ca8aea617?w=600" class="cat-img" alt="Cortes Diarios">
+                <img src="todos los días.jpeg" class="cat-img" alt="Cortes Diarios">
                 <h3 class="cat-title">Para todos los días</h3>
             </div>
 
             <div class="cat-card" onclick="mostrarSeccion('categoria3')">
-                <img src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=600" class="cat-img" alt="Categoría 3">
+                <img src="achuras.jpeg" class="cat-img" alt="Categoría 3">
                 <h3 class="cat-title">Achuras y Embutidos</h3>
             </div>
 
             <div class="cat-card" onclick="mostrarSeccion('categoria4')">
-                <img src="https://images.unsplash.com/photo-1546964124-0cce460f38ef?w=600" class="cat-img" alt="Categoría 4">
+                <img src="para la parrilla.jpeg" class="cat-img" alt="Categoría 4">
                 <h3 class="cat-title">Para la Parrilla</h3>
             </div>
 
@@ -278,7 +278,7 @@
             
             <div class="grid-productos">
                 <div class="prod-card">
-                    <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=500" class="prod-img" alt="Ojo de Bife">
+                    <img src="cortes premium.png" class="prod-img" alt="Ojo de Bife">
                     <div class="prod-info">
                         <h3 class="prod-name">Ojo de Bife Exportación</h3>
                         <p class="prod-desc">Corte con un marmoleo excepcional que garantiza una jugosidad y ternura inigualables a la parrilla.</p>
@@ -287,7 +287,7 @@
                     </div>
                 </div>
                 <div class="prod-card">
-                    <img src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=500" class="prod-img" alt="Tomahawk">
+                    <img src="cortes premium.png" class="prod-img" alt="Tomahawk">
                     <div class="prod-info">
                         <h3 class="prod-name">Tomahawk Steak</h3>
                         <p class="prod-desc">Un corte imponente con hueso largo, ideal para lucirse en el fuego. Carne madurada seleccionada.</p>
@@ -305,7 +305,7 @@
             
             <div class="grid-productos">
                 <div class="prod-card">
-                    <img src="https://images.unsplash.com/photo-1603048588665-791ca8aea617?w=500" class="prod-img" alt="Pulpa Especial">
+                    <img src="todos los días.jpeg" class="prod-img" alt="Pulpa Especial">
                     <div class="prod-info">
                         <h3 class="prod-name">Pulpa para Milanesas</h3>
                         <p class="prod-desc">Corte magro, tierno y perfectamente fileteado. Ideal para las comidas rápidas de la semana en familia.</p>
@@ -314,7 +314,7 @@
                     </div>
                 </div>
                 <div class="prod-card">
-                    <img src="https://images.unsplash.com/photo-1546964124-0cce460f38ef?w=500" class="prod-img" alt="Carne Picada">
+                    <img src="todos los días.jpeg" class="prod-img" alt="Carne Picada">
                     <div class="prod-info">
                         <h3 class="prod-name">Carne Picada Especial</h3>
                         <p class="prod-desc">Molida en el día, con el porcentaje justo de grasa para asegurar sabor en tuco, hamburguesas o pastel de carne.</p>
@@ -325,17 +325,39 @@
             </div>
         </div>
 
-        <!-- SECCIONES 3 Y 4 -->
+        <!-- SECCIONES 3 Y 4 (Achuras y Parrilla) -->
         <div id="seccion-categoria3" class="catalogo-seccion">
             <button class="btn-volver" onclick="volverACategorias()">← Volver</button>
             <h2 class="seccion-titulo">Achuras y Embutidos</h2>
-            <p>Próximamente más productos en esta sección.</p>
+            
+            <div class="grid-productos">
+                <div class="prod-card">
+                    <img src="achuras.jpeg" class="prod-img" alt="Chorizo Artesanal">
+                    <div class="prod-info">
+                        <h3 class="prod-name">Chorizo de Cerdo Premium</h3>
+                        <p class="prod-desc">Elaboración propia con 100% carne de cerdo seleccionada y especias naturales. Sin TACC.</p>
+                        <div class="prod-precio">$ 350 / kg</div>
+                        <a href="https://wa.me/59892684093?text=Hola!%20Me%20interesa%20el%20Chorizo%20Premium" target="_blank" class="btn-pedir">Encargar por WhatsApp</a>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div id="seccion-categoria4" class="catalogo-seccion">
             <button class="btn-volver" onclick="volverACategorias()">← Volver</button>
             <h2 class="seccion-titulo">Para la Parrilla</h2>
-            <p>Próximamente más productos en esta sección.</p>
+            
+            <div class="grid-productos">
+                <div class="prod-card">
+                    <img src="para la parrilla.jpeg" class="prod-img" alt="Asado de Tira">
+                    <div class="prod-info">
+                        <h3 class="prod-name">Asado de Tira Ancho</h3>
+                        <p class="prod-desc">Corte clásico uruguayo con la proporción justa de carne y grasa para un sabor inigualable.</p>
+                        <div class="prod-precio">$ 480 / kg</div>
+                        <a href="https://wa.me/59892684093?text=Hola!%20Me%20interesa%20el%20Asado%20de%20Tira" target="_blank" class="btn-pedir">Encargar por WhatsApp</a>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>
