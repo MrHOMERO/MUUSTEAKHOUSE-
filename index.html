@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo Express</title>
+    <style>
+        /* Estilo Rústico / Industrial */
+        :root {
+            --bg-dark: #1e1b18;
+            --wood-light: #d4a373;
+            --wood-dark: #8b5a2b;
+            --text-light: #f4f1de;
+            --card-bg: #2b2622;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1000') center/cover;
+            text-align: center;
+            padding: 60px 20px;
+            border-bottom: 5px solid var(--wood-light);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+            color: var(--text-light);
+            text-transform: uppercase;
+        }
+
+        header p {
+            color: var(--wood-light);
+            font-style: italic;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #3e3731;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 3px solid var(--wood-light);
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .card-title {
+            margin: 0 0 10px 0;
+            font-size: 1.4rem;
+        }
+
+        .card-price {
+            color: var(--wood-light);
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .btn-whatsapp {
+            display: block;
+            background-color: #25d366;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .btn-whatsapp:hover {
+            background-color: #128c7e;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #777;
+            font-size: 0.9rem;
+            border-top: 1px solid #2b2622;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Mi Catálogo Online</h1>
+        <p>Calidad artesanal directa a tu puerta</p>
+    </header>
+
+    <div class="container">
+        <div class="grid">
+            
+            <!-- Producto 1 -->
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=500" alt="Producto 1" class="card-img">
+                <div class="card-content">
+                    <h3 class="card-title">Opción Premium</h3>
+                    <p>Descripción breve del producto destacando los materiales o ingredientes clave.</p>
+                    <div class="card-price">$ 450</div>
+                    <a href="https://wa.me/59899000000?text=Hola!%20Me%20interesa%20la%20Opción%20Premium" target="_blank" class="btn-whatsapp">Pedir por WhatsApp</a>
+                </div>
+            </div>
+
+            <!-- Producto 2 -->
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=500" alt="Producto 2" class="card-img">
+                <div class="card-content">
+                    <h3 class="card-title">Opción Clásica</h3>
+                    <p>Detalles seleccionados para el cliente. Rápido, directo y sin vueltas.</p>
+                    <div class="card-price">$ 380</div>
+                    <a href="https://wa.me/59899000000?text=Hola!%20Me%20interesa%20la%20Opción%20Clásica" target="_blank" class="btn-whatsapp">Pedir por WhatsApp</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Todos los derechos reservados.</p>
+    </footer>
+
+</body>
+  </html>
