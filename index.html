@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MU Steak House - Catálogo y Selección</title>
+    <title>MU Steak House - Catálogo y Pedido Inteligente</title>
     <!-- Iconos rústicos e industriales -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -25,7 +25,7 @@
             color: var(--text-light);
             margin: 0;
             padding: 0;
-            padding-bottom: 100px; /* Espacio para el panel flotante */
+            padding-bottom: 120px; /* Espacio para el panel flotante */
         }
 
         /* --- HEADER BANNER --- */
@@ -55,7 +55,7 @@
             padding: 0 20px;
         }
 
-        /* --- Vista de Categorías Principales --- */
+        /* --- Vista de Categorías Principales (VISTA 1) --- */
         .grid-categorias {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
@@ -85,7 +85,7 @@
             text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
         }
 
-        /* --- Vistas de Catálogos (Ocultas por defecto) --- */
+        /* --- Vistas de Catálogos (VISTA 2, Ocultas por defecto) --- */
         .catalogo-seccion { display: none; }
 
         .encabezado-catalogo {
@@ -98,7 +98,8 @@
             border: 1px solid var(--wood-light); padding: 8px 15px;
             font-weight: bold; cursor: pointer; border-radius: 4px;
             text-transform: uppercase; transition: background 0.3s;
-            font-size: 0.8rem; display: flex; align-items: center; gap: 6px;
+            text-decoration: none; font-size: 0.8rem;
+            display: flex; align-items: center; gap: 6px;
         }
         .btn-volver:hover { background-color: var(--wood-dark); }
 
@@ -113,7 +114,7 @@
             background-color: var(--card-bg); border-radius: 6px;
             border: 1px solid var(--accent-iron); overflow: hidden;
             display: flex; flex-direction: column; transition: border-color 0.3s, transform 0.2s;
-            position: relative; cursor: pointer;
+            position: relative;
         }
 
         /* ESTADO SELECCIONADO: Borde azul y Tic */
@@ -139,8 +140,16 @@
             margin-top: auto; padding-top: 15px; border-top: 1px solid rgba(74, 69, 64, 0.3);
         }
         .prod-precio { font-size: 1.4rem; color: var(--wood-light); font-weight: bold; }
-        .txt-seleccionar { font-size: 0.8rem; color: #777; text-transform: uppercase; font-weight: bold; }
-        .prod-card.seleccionado .txt-seleccionar { color: var(--tic-azul); }
+        
+        /* Controles de Kilos */
+        .prod-kg-controls { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; }
+        .input-kg {
+            width: 50px; background: transparent; border: 1px solid var(--accent-iron);
+            color: var(--text-light); border-radius: 4px; padding: 4px; text-align: center;
+            font-weight: bold;
+        }
+        .subtotal-item { font-size: 0.9rem; color: #d4a373; margin-top: 10px; display: none; }
+        .prod-card.seleccionado .subtotal-item { display: block; }
 
         /* --- PANEL FLOTANTE FINAL DE ENVÍO --- */
         #panel-envio {
@@ -154,6 +163,7 @@
         .icono-check { font-size: 2rem; color: var(--wood-light); }
         .resumen-seleccion { display: flex; flex-direction: column; }
         .cant-seleccionada { font-weight: bold; font-size: 1.2rem; }
+        .total-compra { font-size: 1.4rem; color: var(--wood-light); font-weight: bold; }
         .txt-ayuda { font-size: 0.9rem; color: #777; }
 
         .btn-enviar-seleccion {
@@ -209,7 +219,7 @@
         <!-- VISTA 2: CATÁLOGO DINÁMICO (Llenado por JS) -->
         <div id="vista-catalogo" class="catalogo-seccion">
             <div class="encabezado-catalogo">
-                <h2 id="catalogo-titulo" class="seccion-titulo">Título</h2>
+                <h2 id="catalogo-titulo" class="seccion-titulo">Título Categoría</h2>
                 <button class="btn-volver" onclick="volverACategorias()">
                     <i class="fa-solid fa-arrow-left"></i> Categorías
                 </button>
@@ -225,14 +235,15 @@
     <!-- PANEL FLOTANTE DE ENVÍO -->
     <div id="panel-envio">
         <div class="info-seleccion">
-            <div class="icono-check"><i class="fa-solid fa-list-check"></i></div>
+            <div class="icono-check"><i class="fa-solid fa-calculator"></i></div>
             <div class="resumen-seleccion">
                 <span id="cant-seleccionada" class="cant-seleccionada">0 productos</span>
-                <span class="txt-ayuda">Toca los productos para marcarlos</span>
+                <span id="total-compra" class="total-compra">TOTAL: $ 0</span>
+                <span class="txt-ayuda">Ingresa kilos para sumar al total</span>
             </div>
         </div>
-        <button id="btn-enviar" class="btn-enviar-seleccion" onclick="enviarSeleccionWhatsApp()" disabled>
-            <i class="fa-brands fa-whatsapp"></i> Enviar productos marcados
+        <button id="btn-enviar" class="btn-enviar-seleccion" onclick="enviarPedidoWhatsApp()" disabled>
+            <i class="fa-brands fa-whatsapp"></i> Confirmar y Enviar Pedido
         </button>
     </div>
 
@@ -240,46 +251,47 @@
         <p>&copy; 2026 MU Steak House. Todos los derechos reservados. | Montevideo, Uruguay</p>
     </footer>
 
-    <!-- LÓGICA DEL CATÁLOGO Y SELECCIÓN (Limpiado y Verificado) -->
+    <!-- LÓGICA DEL CATÁLOGO INTELIGENTE (Calculadora de Kilos) -->
     <script>
-        // BASE DE DATOS DE PRODUCTOS (Reutilizando tus fotos)
+        // BASE DE DATOS DE PRODUCTOS CON PRECIOS NUMÉRICOS (Reutilizando tus fotos)
         const productosDB = {
             'premium': [
-                { id: 'p1', name: 'Ojo de Bife Exportación', desc: 'Marmoleo excepcional, jugosidad.', price: '$ 850 / kg', img: 'cortes premium.png' },
-                { id: 'p2', name: 'Tomahawk Steak', desc: 'Corte imponente con hueso largo.', price: '$ 1200 / kg', img: 'cortes premium.png' },
-                { id: 'p3', name: 'Picaña Premium', desc: 'Capa de grasa perfecta, sabor brasileño.', price: '$ 980 / kg', img: 'cortes premium.png' },
-                { id: 'p4', name: 'Entraña Fina', desc: 'Sabor intenso, textura única.', price: '$ 950 / kg', img: 'cortes premium.png' },
-                { id: 'p5', name: 'T-Bone Steak', desc: 'Dos cortes en uno separated por hueso.', price: '$ 1100 / kg', img: 'cortes premium.png' },
-                { id: 'p6', name: 'Carré de Cordero', desc: 'Corte delicado y tierno, especial.', price: '$ 1350 / kg', img: 'cortes premium.png' }
+                { id: 'p1', name: 'Ojo de Bife Exportación', desc: 'Marmoleo excepcional, jugosidad.', priceText: '$ 850 / kg', basePrice: 850, img: 'cortes premium.png' },
+                { id: 'p2', name: 'Tomahawk Steak', desc: 'Corte imponente con hueso largo.', priceText: '$ 1200 / kg', basePrice: 1200, img: 'cortes premium.png' },
+                { id: 'p3', name: 'Picaña Premium', desc: 'Capa de grasa perfecta, sabor brasileño.', priceText: '$ 980 / kg', basePrice: 980, img: 'cortes premium.png' },
+                { id: 'p4', name: 'Entraña Fina', desc: 'Sabor intenso, textura única.', priceText: '$ 950 / kg', basePrice: 950, img: 'cortes premium.png' },
+                { id: 'p5', name: 'T-Bone Steak', desc: 'Dos cortes en uno separados por hueso.', priceText: '$ 1100 / kg', basePrice: 1100, img: 'cortes premium.png' },
+                { id: 'p6', name: 'Carré de Cordero', desc: 'Corte delicado y tierno, especial.', priceText: '$ 1350 / kg', basePrice: 1350, img: 'cortes premium.png' }
             ],
             'diarios': [
-                { id: 'd1', name: 'Pulpa para Milanesas', desc: 'Fileteada fina y tierna, lista.', price: '$ 580 / kg', img: 'todos los días.jpeg' },
-                { id: 'd2', name: 'Carne Picada Especial', desc: 'Molida en el día, porcentaje justo.', price: '$ 420 / kg', img: 'todos los días.jpeg' },
-                { id: 'd3', name: 'Nalga sin Tapa', desc: 'Magro y versátil, para guisos.', price: '$ 610 / kg', img: 'todos los días.jpeg' },
-                { id: 'd4', name: 'Cuadril Entero', desc: 'Excelente calidad-precio para horno.', price: '$ 650 / kg', img: 'todos los días.jpeg' },
-                { id: 'd5', name: 'Peceto Especial', desc: 'Magro y tierno, vitel toné.', price: '$ 720 / kg', img: 'todos los días.jpeg' },
-                { id: 'd6', name: 'Bola de Lomo', desc: 'Ideal milanesas tiernas o rellenar.', price: '$ 590 / kg', img: 'todos los días.jpeg' }
+                { id: 'd1', name: 'Pulpa para Milanesas', desc: 'Fileteada fina y tierna, lista.', priceText: '$ 580 / kg', basePrice: 580, img: 'todos los días.jpeg' },
+                { id: 'd2', name: 'Carne Picada Especial', desc: 'Molida en el día, porcentaje justo.', priceText: '$ 420 / kg', basePrice: 420, img: 'todos los días.jpeg' },
+                { id: 'd3', name: 'Nalga sin Tapa', desc: 'Magro y versátil, para guisos.', priceText: '$ 610 / kg', basePrice: 610, img: 'todos los días.jpeg' },
+                { id: 'd4', name: 'Cuadril Entero', desc: 'Excelente calidad-precio horno.', priceText: '$ 650 / kg', basePrice: 650, img: 'todos los días.jpeg' },
+                { id: 'd5', name: 'Peceto Especial', desc: 'Magro y tierno, vitel toné.', priceText: '$ 720 / kg', basePrice: 720, img: 'todos los días.jpeg' },
+                { id: 'd6', name: 'Bola de Lomo', desc: 'Ideal milanesas tiernas o rellenar.', priceText: '$ 590 / kg', basePrice: 590, img: 'todos los días.jpeg' }
             ],
             'achuras': [
-                { id: 'a1', name: 'Chorizo de Cerdo MU', desc: 'Artesanal, carne seleccionada.', price: '$ 450 / kg', img: 'achuras.jpeg' },
-                { id: 'a2', name: 'Mollejas de Bife', desc: 'Tiernas y crocantes, indispensable.', price: '$ 890 / kg', img: 'achuras.jpeg' },
-                { id: 'a3', name: 'Chinchulines Premium', desc: 'Limpios y listos, trenzados.', price: '$ 380 / kg', img: 'achuras.jpeg' },
-                { id: 'a4', name: 'Morcilla Dulce/Salada', desc: 'Suaves y sabrosas, receta tradicional.', price: '$ 320 / kg', img: 'achuras.jpeg' },
-                { id: 'a5', name: 'Salchicha Parrillera', desc: 'Fina condimentada, para copetín.', price: '$ 480 / kg', img: 'achuras.jpeg' },
-                { id: 'a6', name: 'Pamplona de Pollo', desc: 'Rellena queso, jamón, panceta.', price: '$ 250 / unid', img: 'achuras.jpeg' }
+                { id: 'a1', name: 'Chorizo de Cerdo MU', desc: 'Artesanal, carne seleccionada.', priceText: '$ 450 / kg', basePrice: 450, img: 'achuras.jpeg' },
+                { id: 'a2', name: 'Mollejas de Bife', desc: 'Tiernas y crocantes, indispensable.', priceText: '$ 890 / kg', basePrice: 890, img: 'achuras.jpeg' },
+                { id: 'a3', name: 'Chinchulines Premium', desc: 'Limpios y listos, trenzados.', priceText: '$ 380 / kg', basePrice: 380, img: 'achuras.jpeg' },
+                { id: 'a4', name: 'Morcilla Dulce/Salada', desc: 'Receta tradicional suave.', priceText: '$ 320 / kg', basePrice: 320, img: 'achuras.jpeg' },
+                { id: 'a5', name: 'Salchicha Parrillera', desc: 'Fina condimentada, para copetín.', priceText: '$ 480 / kg', basePrice: 480, img: 'achuras.jpeg' },
+                { id: 'a6', name: 'Pamplona de Pollo', desc: 'Rellena queso, jamón, panceta.', priceText: '$ 250 / unid', basePrice: 250, img: 'achuras.jpeg' }
             ],
             'parrilla': [
-                { id: 'pa1', name: 'Asado de Tira Ancho', desc: 'Clásico uruguayo indispensable.', price: '$ 620 / kg', img: 'para la parrilla.jpeg' },
-                { id: 'pa2', name: 'Vacío Especial', desc: 'Crocante fuera, tierno dentro.', price: '$ 680 / kg', img: 'para la parrilla.jpeg' },
-                { id: 'pa3', name: 'Colita de Cuadril', desc: 'Tierno sin hueso, para horno.', price: '$ 750 / kg', img: 'para la parrilla.jpeg' },
-                { id: 'pa4', name: 'Matambre Vacuno', desc: 'Tierno y sabroso, a la pizza.', price: '$ 590 / kg', img: 'para la parrilla.jpeg' },
-                { id: 'pa5', name: 'Costillar Entero', desc: 'Para asado lento y paciencia.', price: '$ 550 / kg', img: 'para la parrilla.jpeg' },
-                { id: 'pa6', name: 'Bondiola de Cerdo', desc: 'Jugosa y sabrosa, para lenta.', price: '$ 490 / kg', img: 'para la parrilla.jpeg' }
+                { id: 'pa1', name: 'Asado de Tira Ancho', desc: 'Clásico uruguayo indispensable.', priceText: '$ 620 / kg', basePrice: 620, img: 'para la parrilla.jpeg' },
+                { id: 'pa2', name: 'Vacío Especial', desc: 'Crocante fuera, tierno dentro.', priceText: '$ 680 / kg', basePrice: 680, img: 'para la parrilla.jpeg' },
+                { id: 'pa3', name: 'Colita de Cuadril', desc: 'Tierno sin hueso, para horno.', priceText: '$ 750 / kg', basePrice: 750, img: 'para la parrilla.jpeg' },
+                { id: 'pa4', name: 'Matambre Vacuno', desc: 'Tierno y sabroso, a la pizza.', priceText: '$ 590 / kg', basePrice: 590, img: 'para la parrilla.jpeg' },
+                { id: 'pa5', name: 'Costillar Entero', desc: 'Para fanáticos asado lento.', priceText: '$ 550 / kg', basePrice: 550, img: 'para la parrilla.jpeg' },
+                { id: 'pa6', name: 'Bondiola de Cerdo', desc: 'Jugosa y sabrosa, para lenta.', priceText: '$ 490 / kg', basePrice: 490, img: 'para la parrilla.jpeg' }
             ]
         };
 
         const tuNumeroWhatsApp = '59892684093';
-        let productosSeleccionados = new Set();
+        // ESTADO DEL PEDIDO (Map: ID -> {cantidad, price, name})
+        let pedidoMap = new Map();
 
         // --- NAVEGACIÓN ---
         function mostrarSeccion(idCategoria, tituloCategoria) {
@@ -290,18 +302,33 @@
             const listaProductos = productosDB[idCategoria];
             if (listaProductos) {
                 listaProductos.forEach(producto => {
-                    const isSelected = productosSeleccionados.has(producto.id);
+                    // Verificar si ya está en el pedido
+                    const itemPedido = pedidoMap.get(producto.id);
+                    const cantidadCargada = itemPedido ? itemPedido.cantidad : 1;
+                    const subtotalCargado = itemPedido ? itemPedido.cantidad * itemPedido.basePrice : 0;
+
                     gridDinamico.innerHTML += `
-                        <div id="card-${producto.id}" class="prod-card ${isSelected ? 'seleccionado' : ''}" onclick="toggleSeleccion('${producto.id}', '${producto.name}')">
+                        <div id="card-${producto.id}" class="prod-card ${itemPedido ? 'seleccionado' : ''}">
                             <div class="tic-seleccion"><i class="fa-solid fa-check"></i></div>
                             <div class="prod-img-container"><img src="${producto.img}" class="prod-img" alt="${producto.name}"></div>
                             <div class="prod-info">
                                 <h3 class="prod-name">${producto.name}</h3>
                                 <p class="prod-desc">${producto.desc}</p>
                                 <div class="prod-metadata">
-                                    <div class="prod-precio">${producto.price}</div>
-                                    <span class="txt-seleccionar">${isSelected ? 'Marcado' : 'Toca para marcar'}</span>
+                                    <div class="prod-precio">${producto.priceText}</div>
+                                    
+                                    <div class="prod-kg-controls">
+                                        <input type="number" id="input-kg-${producto.id}" class="input-kg" value="${cantidadCargada}" min="0.5" step="0.5" onchange="actualizarKilos('${producto.id}', '${idCategoria}', this.value)">
+                                        <span>kg</span>
+                                    </div>
                                 </div>
+                                <span class="subtotal-item" id="subtotal-${producto.id}">Subtotal: $ ${subtotalCargado.toLocaleString('es-UY', { minimumFractionDigits: 2 })}</span>
+                                <button id="btn-add-${producto.id}" class="btn-add-cart" style="margin-top:10px; width:100%; display:${itemPedido ? 'none' : 'flex'};" onclick="agregarAlPedido('${producto.id}', '${idCategoria}')">
+                                    <i class="fa-solid fa-cart-plus"></i> Agregar al Pedido
+                                </button>
+                                <button id="btn-remove-${producto.id}" class="btn-add-cart" style="margin-top:10px; width:100%; background-color:#cc4444; display:${itemPedido ? 'flex' : 'none'};" onclick="quitarDelPedido('${producto.id}')">
+                                    <i class="fa-solid fa-trash-can"></i> Quitar
+                                </button>
                             </div>
                         </div>
                     `;
@@ -317,42 +344,32 @@
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
-        // --- SELECCIÓN ---
-        function toggleSeleccion(idProducto, nombreProducto) {
-            const card = document.getElementById(`card-${idProducto}`);
-            const txt = card.querySelector('.txt-seleccionar');
-            if (productosSeleccionados.has(idProducto)) {
-                productosSeleccionados.delete(idProducto);
-                card.classList.remove('seleccionado');
-                txt.innerText = 'Toca para marcar';
-            } else {
-                productosSeleccionados.add(idProducto);
-                card.classList.add('seleccionado');
-                txt.innerText = 'Marcado';
-            }
-            actualizarPanelEnvio();
-        }
+        // --- LÓGICA DE PEDIDO Y CÁLCULO ---
+        function agregarAlPedido(idProducto, idCategoria) {
+            const producto = productosDB[idCategoria].find(p => p.id === idProducto);
+            const inputKg = document.getElementById(`input-kg-${idProducto}`);
+            const cantidad = parseFloat(inputKg.value) || 1;
 
-        function actualizarPanelEnvio() {
-            const cantLabel = document.getElementById('cant-seleccionada');
-            const btnEnviar = document.getElementById('btn-enviar');
-            const cant = productosSeleccionados.size;
-            cantLabel.innerText = `${cant} producto${cant === 1 ? '' : 's'} seleccionado${cant === 1 ? '' : 's'}`;
-            btnEnviar.disabled = (cant === 0);
-        }
-
-        // --- ENVÍO ---
-        function enviarSeleccionWhatsApp() {
-            if (productosSeleccionados.size === 0) return;
-            let mensaje = "¡Hola MU Steak House! Me interesa consultar por:\n\n";
-            Object.values(productosDB).forEach(categoria => {
-                categoria.forEach(prod => {
-                    if (productosSeleccionados.has(prod.id)) { mensaje += `- *${prod.name}*\n`; }
+            if (producto) {
+                // Agregar al mapa del pedido
+                pedidoMap.set(idProducto, { 
+                    id: idProducto,
+                    name: producto.name,
+                    cantidad: cantidad,
+                    basePrice: producto.basePrice
                 });
-            });
-            mensaje += "\n¿Tienen disponibilidad? ¡Gracias!";
-            window.open(`https://wa.me/${tuNumeroWhatsApp}?text=${encodeURIComponent(mensaje)}`, '_blank');
+                
+                // Actualizar interfaz visual de la tarjeta
+                document.getElementById(`card-${idProducto}`).classList.add('seleccionado');
+                document.getElementById(`btn-add-${idProducto}`).style.display = 'none';
+                document.getElementById(`btn-remove-${idProducto}`).style.display = 'flex';
+                
+                actualizarSubtotal(idProducto);
+                actualizarPanelEnvio();
+            }
         }
-    </script>
-</body>
-</html>
+
+        function quitarDelPedido(idProducto) {
+            pedidoMap.delete(idProducto);
+            
+            // Actualizar int
